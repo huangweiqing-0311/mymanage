@@ -1,0 +1,54 @@
+/*初始化样式*/
+a,
+b,
+i,
+u,
+li,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+img,
+input,
+span,
+div,
+strong,
+ol,
+dt,
+ins,
+del,
+body {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  height: 100%;
+}
+a {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+img {
+  border: 0;
+  vertical-align: middle;
+}
+input {
+  outline: none;
+  border: 0;
+}
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+.clearfix {
+  *zoom: 1;
+}

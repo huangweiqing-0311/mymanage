@@ -2,14 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 
 Vue.config.productionTip = false
-
- //导入vue-router
- import VueRouter from 'vue-router'
- Vue.use(VueRouter)
-
+ 
+ //导入全局样式
+  import './assets/css/base.less'
+   
  //导入饿了么UI
  import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+ import 'element-ui/lib/theme-chalk/index.css';
  //use一下
  Vue.use(ElementUI);
 
