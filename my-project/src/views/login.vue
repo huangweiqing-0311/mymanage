@@ -32,6 +32,7 @@
   import {http} from '../api/http'
    
 export default {
+  name: 'login',
   data() {
       return {
       ruleForm: {

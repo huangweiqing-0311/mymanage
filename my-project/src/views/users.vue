@@ -1,0 +1,142 @@
+<template>
+  <div class="my-users">
+    <!-- 面包屑导航 -->
+    <bread first="用户管理" second="用户列表"></bread>
+
+    <!-- 搜索栏 -->
+    <el-row>
+      <div class="search">
+        <el-col :span="6">
+          <el-input v-model="searchVal" clearable placeholder="请输入内容">
+            <el-button slot="append" icon="el-icon-search"></el-button>
+          </el-input>
+        </el-col>
+        <el-button type="success">添加用户</el-button>
+      </div>
+    </el-row>
+
+    <!-- 表格 -->
+    <el-table :data="tableData" :border="true" style="width: 100%">
+      <el-table-column prop="username" label="姓名" width="180"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="300"></el-table-column>
+      <el-table-column prop="mobile" label="电话" width="300"></el-table-column>
+      <el-table-column label="用户状态"  width="80">
+          <template slot-scope="scope">
+              <el-switch
+                v-model="value"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+              </el-switch>
+          </template>
+      </el-table-column>
+      </el-table-column>
+      <el-table-column label="操作"  width="240">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+             <el-button
+          size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+        <el-button
+          size="mini"
+          type="danger"
+         @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+      </template>
+    </el-table-column>
+    </el-table>
+
+    <!-- 分页 -->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[5,10]"
+      :page-size="5"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="50"
+    ></el-pagination>
+
+    <!-- 添加用户 -->
+    <el-dialog title="添加用户" :visible.sync="addUserFormVisible">
+      <el-form
+        label-position="right"
+        label-width="100px"
+        :rules="rules"
+        ref="addUserForm"
+        :model="addFormData"
+       >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addFormData.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="addFormData.password" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addFormData.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="addFormData.mobile"></el-input>
+        </el-form-item>
+       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addUserFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAddUser">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+        value: true,
+
+       tableData: [
+          {
+          username: "王小虎",
+          email: "1923016923@qq.com",
+          mobile: "13000030379",
+          },
+            {
+          username: "王小虎",
+          email: "1923016923@qq.com",
+          mobile: "13000030379",
+          },
+            {
+          username: "王小虎",
+          email: "1923016923@qq.com",
+          mobile: "13000030379",
+          },
+            {
+          username: "王小虎",
+          email: "1923016923@qq.com",
+          mobile: "13000030379",
+          },
+        
+      ],
+
+      //添加用户
+      addFormData: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
+      }
+    };
+  },
+
+  methods: {
+
+  }
+};
+</script>
+
+<style lang="less" scoped>
+      .my-users{
+          .search{
+              padding: 15px 0;
+          }
+      }
+</style>

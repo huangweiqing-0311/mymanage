@@ -12,23 +12,34 @@
              default-active: 默认展开项
          -->
         <el-menu
+         default-active=""
          :unique-opened = "true"
           class="el-menu-vertical-demo"
-          router
+          :router="true"
         >
-           <el-submenu :index="'' + index" v-for="(item,index) in menusList" >
+           <el-submenu 
+           v-for="(item,index) in menusList"
+           :index="'' + index" 
+           :key="item.id"
+            >
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>{{item.authName}}</span>
             </template>
-                 <el-menu-item :index="it.path"   v-for="it in item.children" >
+                 <el-menu-item 
+                  v-for="it in item.children"
+                 :index="it.path"
+                 :key="it.id"
+                  >
                   <i class="el-icon-menu"></i><span>{{it.authName}}</span> 
                 </el-menu-item>
             </el-submenu>
         </el-menu>
       </el-aside>
 
-      <el-main class="my-main"></el-main>
+      <el-main class="my-main">
+         <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -38,6 +49,7 @@
  import {http} from '../api/http.js'
  
 export default {
+  name: 'index',
   data(){
       return {
          menusList : [],
@@ -95,8 +107,12 @@ export default {
       color: rgb(164, 83, 195);
     }
   }
+  .my-aside{
+      background: #fff;
+  }
   .my-main {
-    background-color: rgb(242, 248, 248);
+      background-color: rgb(242, 248, 248);
+      padding-top: 0;
   }
 }
 </style>

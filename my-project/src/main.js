@@ -12,6 +12,11 @@ Vue.config.productionTip = false
  //use一下
  Vue.use(ElementUI);
 
+ //注册全局组件
+  import bread from './components/bread.vue'
+  //参数1: 组件名;  参数2: 组件对象 
+  Vue.component('bread', bread)
+
  //导入路由对象
  import router from './routers/routers.js'
 

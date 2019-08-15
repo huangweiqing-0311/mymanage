@@ -19,8 +19,10 @@
   //获取左边菜单栏封装成函数
    http.menus = () => {
        return http.get('menus', {
+            params: {},
             headers: {
-                //在请求头里设置一个登陆标记
+                
+                  //发请求时把 token 发过去, 服务器根据 token 识别用户
                 Authorization: window.localStorage.getItem('token')
             } 
        }) 

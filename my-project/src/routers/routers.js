@@ -10,12 +10,18 @@ Vue.use(VueRouter)
 //导入组件
 import login from '../views/login.vue'
 import index from '../views/index.vue'
+import users from '../views/users.vue'
 
 //设置路由规则
 const routes = [
   {path: '/login', component: login},
   {path: '', redirect: '/login'},
-  {path: '/index', component: index},
+  {path: '/index', component: index,
+   children: [
+      {path: '/users', component: users},
+        
+   ]
+  },
 ]
 
 //创建路由对象
