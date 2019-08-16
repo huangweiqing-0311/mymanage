@@ -6,8 +6,12 @@
     <!-- 搜索栏 -->
     <el-row>
          <el-col :span="8">
-          <el-input v-model="searchVal" clearable placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input
+           @input="getUsers"
+           class="input-with-select"
+           v-model.trim="searchList.query"
+            placeholder="请输入内容">
+            <el-button slot="append" icon="el-icon-search" @click="getUsers"></el-button>
           </el-input>
         </el-col>
         <el-col :span="16">
@@ -62,16 +66,16 @@
       @current-change="handleCurrentChange"
       :current-page="searchList.pagenum"
       :page-sizes="[5,10]"
-      :page-size="5"
+      :page-size="searchList.pagesize"
        layout="total, sizes, prev, pager, next, jumper"
       :total="total"
     ></el-pagination>
 
-    <!-- 添加用户 -->
+    <!-- 新增用户 -->
     <el-dialog title="添加用户" :visible.sync="addUserFormVisible">
       <el-form
         label-position="right"
-        label-width="100px"
+        label-width="120px"
         :rules="rules"
          ref="addFormData"
         :model="addFormData"
@@ -102,10 +106,25 @@
  export default {
   data() {
     return {
-      //
+      //用户信息
+      addFormData: {
+          
+      },
 
       //表格数据
      tableData: [ ],
+
+     //表格数据匹配
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 9, message: "长度在 3 到 9 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 12, message: "长度在 6 到 12 个字符", trigger: "blur" }
+        ]
+      },
 
       //添加用户
       addFormData: {
@@ -125,7 +144,7 @@
         },
 
         //面板显示与隐藏(默认false)
-        addUserFormVisible = false
+        addUserFormVisible: false, 
 
       };
   },
@@ -134,7 +153,31 @@
         //添加用户点击事件
         addUsers(){
            //显示添加面板
-           addUserFormVisible = true
+           this.addUserFormVisible = true
+        },
+        //新增
+        submitForm(formName){
+              this.$refs[formName].validate((valid) => {
+                  //通过验证
+                  if(valid){
+                    http.addNewUser(this.addFormData)
+                      .then(res => {
+                           console.log(res)
+                           if(res.data.meta.status == 201){
+                               //提示用户
+                               this.$message.success('创建成功!')
+                               //刷新页面
+                               this.getUsers()
+                               //隐藏添加面板
+                               this.addUserFormVisible = false
+                           }
+                      })  
+                      
+                  } else{
+                      
+                     return false
+                  }
+              })
         },
 
         //页容量改变的事件

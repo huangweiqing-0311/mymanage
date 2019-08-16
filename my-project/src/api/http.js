@@ -1,6 +1,9 @@
  //导入axios
  import axios from 'axios'
 
+ import Vue from 'vue'
+ import router from '../routers/routers'
+
  //创建 多基地址, 并把对象导出
  export const http = axios.create({
      baseURL: 'http://localhost:8888/api/private/v1'
@@ -20,10 +23,10 @@
   http.menus = () => {
        return http.get('menus', {
             params: {},
-            headers: {
-                  //发请求时把 token 发过去, 服务器根据 token 识别用户
-                Authorization: window.localStorage.getItem('token')
-            } 
+            // headers: {
+            //       //发请求时把 token 发过去, 服务器根据 token 识别用户
+            //     Authorization: window.localStorage.getItem('token')
+            // } 
        }) 
    }
 
@@ -42,3 +45,43 @@
            } 
           })
       }
+
+    //添加新用户的方法
+    http.addNewUser = ({username, password, email, mobile}) => {
+        //post请求不要用params来传参
+         return http.post('users', {
+               username,
+               password,
+               email,
+               mobile,
+         })
+    }  
+
+
+    //请求拦截
+    //可以在发这个请求之前把请求拦截下来,
+    //添加一个请求头 token, 才能获取到数据
+     http.interceptors.request.use(function (config) {
+        config.headers.Authorization = window.localStorage.getItem('token')
+        return config
+     }, function(error) {
+           // 对请求错误做些什么
+        return Promise.reject(error)
+     })
+
+
+     //响应拦截器
+     http.interceptors.response.use(function(response) {
+        if(response.data.meta.status == 400 && response.data.meta.msg == '无效token'){
+              //vue里的方法提示要登录(导入vue文件)
+              Vue.prototype.$message.warning('你还没有登录,请先登录!!!')
+              //回到登录页(导入router文件)
+              router.push('/login')
+              return
+             }
+             return response
+  
+      }, function(error) {
+           //响应错误
+           return Promise.reject(error)
+      })
