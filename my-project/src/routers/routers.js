@@ -17,6 +17,8 @@ const routes = [
   {path: '/login', component: login},
   {path: '', redirect: '/login'},
   {path: '/index', component: index,
+   //设置路由元信息(登陆过就会有)
+   meta: {needLogin: true},
    children: [
       {path: '/users', component: users},
         
@@ -34,8 +36,8 @@ const routes = [
   //from: 当前导航要离开的路由
   router.beforeEach((to, from, next) => {
         //window.console.log(to)
-        //只有首页要导航守卫
-        if(to.path.indexOf('index') != -1){
+        //只有首页要导航守卫,判断路由元信息即可
+        if(to.meta.needLogin){
              if(window.localStorage.getItem('token')){
                  next()
              }else{

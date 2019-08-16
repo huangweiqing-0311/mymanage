@@ -17,13 +17,28 @@
   }
 
   //获取左边菜单栏封装成函数
-   http.menus = () => {
+  http.menus = () => {
        return http.get('menus', {
             params: {},
             headers: {
-                
                   //发请求时把 token 发过去, 服务器根据 token 识别用户
                 Authorization: window.localStorage.getItem('token')
             } 
        }) 
    }
+
+   //获取用户数据的方法
+   http.searchUserList = ({query, pagenum, pagesize}) => {
+          //get请求用params传参
+          return http.get('users', {
+             params:{
+                 query,
+                 pagenum,
+                 pagesize,
+             },
+             headers: {
+                //发请求时把 token 发过去, 服务器根据 token 识别用户
+              Authorization: window.localStorage.getItem('token')
+           } 
+          })
+      }
