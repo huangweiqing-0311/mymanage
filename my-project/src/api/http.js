@@ -57,6 +57,29 @@
          })
     }  
 
+    //删除用户的方法
+    http.deleteUser = (id) => {
+         return http.delete('users/'+id)
+    }
+
+    //编辑用户信息的方法
+    http.editUser = ({id, email, mobile}) =>{
+          return http.put(`users/${id}`, {
+               email,
+               mobile,
+          })
+    }
+
+    //获取角色列表的方法
+    http.getRolesList = () => {
+         return http.get('roles')
+    }
+
+    //id查询用户角色信息的方法
+    http.searchUserRole = (id) => {
+          return http.get('user/'+id)
+    }
+
 
     //请求拦截
     //可以在发这个请求之前把请求拦截下来,

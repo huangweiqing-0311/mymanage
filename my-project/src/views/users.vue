@@ -43,19 +43,19 @@
             plain
             type="primary"
            icon="el-icon-edit"
-            @click="handleEdit(scope.$index, scope.row)"> </el-button>
+            @click="handleEdit(scope.row)"> </el-button>
         <el-button
           size="mini"
            type="danger"
            plain
            icon="el-icon-delete"
-         @click="handleDelete(scope.$index, scope.row)"> </el-button>
+         @click="handleDelete(scope.row)"></el-button>
         <el-button
           size="mini"
            type="warning"
            plain
            icon="el-icon-check"
-            @click="handleRole(scope.$index, scope.row)"> </el-button>
+            @click="handleRole(scope.row)"> </el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -98,6 +98,53 @@
         <el-button type="primary" @click="submitForm('addFormData')">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑用户 -->
+     <el-dialog title="编辑用户" :visible.sync="editUserFormVisible">
+      <el-form
+        label-position="right"
+        label-width="120px"
+        :rules="rules"
+         ref="editFormData"
+        :model="editFormData"
+       >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editFormData.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editFormData.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+          <el-input v-model="editFormData.mobile"></el-input>
+        </el-form-item>
+       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editUserFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editForm('editFormData')">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 用户角色 -->
+       <el-dialog title="用户角色" :visible.sync="roleUserFormVisible">
+      <el-form
+        label-position="right"
+        label-width="120px"
+        :rules="rules"
+         ref="roleFormData"
+        :model="roleFormData"
+       >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="roleFormData.username" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="角色" prop="role_name">
+          <el-input v-model="roleFormData.role_name"></el-input>
+        </el-form-item>
+         </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="roleUserFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="roleForm('roleFormData')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -106,10 +153,25 @@
  export default {
   data() {
     return {
-      //用户信息
-      addFormData: {
-          
+      //角色分配对象
+      roleFormData: {
+          id: '',
+          ro_id: '',
+          role_name:'', 
+          username: '',
       },
+
+      //编辑用户
+      editFormData: {
+          username: '',
+          id: '',
+          email: '',
+          mobile: '', 
+          role_id: '',  
+      },
+
+    //保存用户角色的数组
+      rolesList: [],
 
       //表格数据
      tableData: [ ],
@@ -126,7 +188,7 @@
         ]
       },
 
-      //添加用户
+      //添加表单的数据
       addFormData: {
         username: "",
         password: "",
@@ -145,7 +207,7 @@
 
         //面板显示与隐藏(默认false)
         addUserFormVisible: false, 
-
+        editUserFormVisible: false,
       };
   },
 
@@ -162,7 +224,7 @@
                   if(valid){
                     http.addNewUser(this.addFormData)
                       .then(res => {
-                           console.log(res)
+                           //console.log(res)
                            if(res.data.meta.status == 201){
                                //提示用户
                                this.$message.success('创建成功!')
@@ -178,6 +240,58 @@
                      return false
                   }
               })
+        },
+
+        //删除用户
+       handleDelete(row){
+            this.$confirm('亲,你真的要删除我吗?', '温馨提示', {
+                type: 'warning',
+            })
+            .then( () => {
+              //确认删除,发请求
+               http.deleteUser(row.id).then(res => {
+                   // console.log(res)
+                    if(res.data.meta.status == 200){
+                      //提示用户
+                       this.$message.success('删除成功!') 
+                      //刷新页面
+                       this.getUsers()
+                    }
+               })   
+            }).catch( () => {
+               this.$message.error('已取消删除!')
+            })  
+       },
+
+       //编辑用户信息
+       //01-点击 => 显示面板 => 把当前点击用户的数据展现到面板上
+       handleEdit(data){
+           this.editFormData.username = data.username
+           this.editFormData.id = data.id
+           this.editFormData.email = data.email
+           this.editFormData.mobile = data.mobile
+           this.editUserFormVisible = true
+       },
+       //02-根据id发编辑请求 => 刷新页面
+        editForm(){
+            http.editUser(this.editFormData)
+              .then(res => {
+                  //console.log(res)
+                  if(res.data.meta.status == 200){
+                      this.$message.success('更新成功!')
+                      //
+                      this.getUsers() 
+                  } else{
+                      this.$message.error(res.data.meta.msg)
+                  }
+              })
+        },
+
+        //角色
+        handleRole(row){
+             http.searchUserRole(row.id).then(res =>{
+                 
+             }) 
         },
 
         //页容量改变的事件
@@ -196,21 +310,35 @@
 
         //获取用户数据列表的方法封装
         getUsers(){
+            
             http.searchUserList(this.searchList)
             .then(res => {
-                console.log(res)
+                 //console.log(res)
                 if(res){
                   //把请求回来的数据赋值给表格做展示
                   this.tableData = res.data.data.users
                   this.total = res.data.data.total
                   }
             })
-        },    
+        },  
+        //获取用户角色列表的方法
+        getUserRoles(){
+           http.getRolesList().then(res => {
+             this.rolesList = res.data.data   
+          })
+       }
   },
 
   created() {
+      
+     //调用获取用户的信息
       this.getUsers()
-  },
+
+      //调用获取用户角色
+       this.getUserRoles() 
+    },
+
+   
 };
 </script>
 
