@@ -28,7 +28,7 @@
       <el-table-column label="用户状态"  width="80">
           <template slot-scope="scope">
               <el-switch
-               @click="handleState(scope.row)"
+               @click.native="handleState(scope.row)"
                 v-model="scope.row.mg_state"
                 active-color="#13ce66"
                 inactive-color="#ff4949">
@@ -55,7 +55,7 @@
            type="warning"
            plain
            icon="el-icon-check"
-            @click="handleRole(scope.row)"> </el-button>
+         @click="handleRole(scope.row)"> </el-button>
       </template>
     </el-table-column>
     </el-table>
@@ -125,27 +125,30 @@
     </el-dialog>
 
     <!-- 用户角色 -->
-       <el-dialog title="用户角色" :visible.sync="roleUserFormVisible">
-      <el-form
-        label-position="right"
-        label-width="120px"
-        :rules="rules"
-         ref="roleFormData"
-        :model="roleFormData"
-       >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="roleFormData.username" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="角色" prop="role_name">
-          <el-input v-model="roleFormData.role_name"></el-input>
-        </el-form-item>
-         </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="roleUserFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="roleForm('roleFormData')">确 定</el-button>
+    <el-dialog title="分配角色" :visible.sync="roleFormVisible">
+       <el-form 
+       label-position="center"
+       label-width="120px"
+        ref="usermsg"
+       :model="usermsg" >
+          <el-form-item label="当前用户">
+             <span>{{usermsg.username}}</span>
+          </el-form-item>
+          <el-form-item label="请选择角色">
+            <el-select v-model="roleFormData.role_name" placeholder="请选择角色">
+              <!-- 角色权限列表 -->
+              <el-option v-for="item in rolesList" :label="item.roleName" :value="item.id"></el-option>
+               </el-select>
+          </el-form-item>
+      </el-form>
+       <div slot="footer" class="dialog-footer">
+        <el-button @click="roleFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="setRoleForm('usermsg')">确 定</el-button>
       </div>
-    </el-dialog>
-  </div>
+   </el-dialog>
+
+  
+ </div>
 </template>
 
 <script>
@@ -170,7 +173,10 @@
           role_id: '',  
       },
 
-    //保存用户角色的数组
+      //用户信息
+      usermsg: {},
+
+    //保存用户角色的数组,里面是角色权限对象
       rolesList: [],
 
       //表格数据
@@ -193,11 +199,12 @@
         username: "",
         password: "",
         email: "",
-        mobile: ""
+        mobile: "",
+        id: '',
         },
          
         //总页数
-        total: '',
+        total: '0',
         //请求的用户数据列表
         searchList: {
            query: '',
@@ -208,10 +215,32 @@
         //面板显示与隐藏(默认false)
         addUserFormVisible: false, 
         editUserFormVisible: false,
+        roleFormVisible: false,
       };
   },
 
   methods: {
+        //设置状态
+        handleState(row){
+            if(row.mg_state){
+                http.alterUserState(row.id, row.mg_state)
+                  .then(res =>{
+                    console.log(res)
+                    if(res.data.meta.status == 200){
+                        this.$message.success(res.data.meta.msg)
+                    }
+                    })
+                 
+            }else{
+                http.alterUserState(row.id, row.mg_state)
+                  .then(res =>{
+                    console.log(res)
+                    if(res.data.meta.status == 200){
+                        this.$message.success(res.data.meta.msg)
+                    }
+                    })
+            }  
+        },
         //添加用户点击事件
         addUsers(){
            //显示添加面板
@@ -224,8 +253,10 @@
                   if(valid){
                     http.addNewUser(this.addFormData)
                       .then(res => {
-                           //console.log(res)
+                            //console.log(res)
                            if(res.data.meta.status == 201){
+                               //把用户的id存起来
+                               this.addFormData.id = res.data.data.id
                                //提示用户
                                this.$message.success('创建成功!')
                                //刷新页面
@@ -244,7 +275,7 @@
 
         //删除用户
        handleDelete(row){
-            this.$confirm('亲,你真的要删除我吗?', '温馨提示', {
+            this.$confirm('亲,你真的要删除该用户吗?', '温馨提示', {
                 type: 'warning',
             })
             .then( () => {
@@ -257,9 +288,9 @@
                       //刷新页面
                        this.getUsers()
                     }
-               })   
+                 })   
             }).catch( () => {
-               this.$message.error('已取消删除!')
+               this.$message.warning('已取消删除!')
             })  
        },
 
@@ -288,10 +319,28 @@
         },
 
         //角色
+        //显示分配角色面板 => 获取所有角色信息展现到面板上
         handleRole(row){
-             http.searchUserRole(row.id).then(res =>{
-                 
-             }) 
+            //console.log(row)
+            //根据id查询用户信息
+             this.getUserMsg(row.id)
+             //显示面板,把用户名, 角色权限显示到分配角色面板上
+             this.roleFormVisible = true
+             //获取权限信息展现到隐藏的下拉框中
+             this.getUserRoles()
+          },
+        //确认设置分配角色
+        setRoleForm(){
+            //发请求
+            http.allotRole(this.usermsg.id, this.usermsg.rid).then(res =>{
+                 console.log(res)
+                 if(res.data.meta.status == 200) {
+                   //设置成功,提示用户
+                     this.$message.success(res.data.meta.msg)
+                   //隐藏分配角色面板
+                   this.roleFormVisible = false
+                 }
+            })
         },
 
         //页容量改变的事件
@@ -310,8 +359,7 @@
 
         //获取用户数据列表的方法封装
         getUsers(){
-            
-            http.searchUserList(this.searchList)
+              http.searchUserList(this.searchList)
             .then(res => {
                  //console.log(res)
                 if(res){
@@ -321,21 +369,36 @@
                   }
             })
         },  
+
+        //根据id查询用户信息
+        getUserMsg(id){
+             http.searchUserMsg(id)
+               .then(res => {
+                   //console.log(res)
+                   if(res.data.meta.status == 200){
+                       this.usermsg = res.data.data
+                     }
+               })
+        },
+
         //获取用户角色列表的方法
         getUserRoles(){
            http.getRolesList().then(res => {
+              console.log(res)
+             //把角色信息保存起来
              this.rolesList = res.data.data   
           })
-       }
+       },
+
+        
   },
 
   created() {
       
      //调用获取用户的信息
       this.getUsers()
-
-      //调用获取用户角色
-       this.getUserRoles() 
+    //调用获取所有角色信息
+     //  this.getUserRoles() 
     },
 
    

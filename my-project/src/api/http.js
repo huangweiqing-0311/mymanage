@@ -70,15 +70,31 @@
           })
     }
 
+     //id查询用户信息的方法
+     http.searchUserMsg = (id) => {
+          return http.get('users/'+id)
+    }
+
+    //分配用户角色的方法
+     http.allotRole = (id, rid) => {
+          return http.put(`users/${id}/role`, {
+              rid,  //角色的id
+          })
+     }
+
     //获取角色列表的方法
+    //第一层为角色信息,第二层为权限说明,有三层权限
     http.getRolesList = () => {
          return http.get('roles')
     }
 
-    //id查询用户角色信息的方法
-    http.searchUserRole = (id) => {
-          return http.get('user/'+id)
-    }
+    //修改用户状态的方法
+     http.alterUserState = (id, state) => {
+            return http.put(`users/${id}/state/${state}`)
+     }
+
+    
+     
 
 
     //请求拦截
