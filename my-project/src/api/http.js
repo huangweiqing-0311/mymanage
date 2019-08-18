@@ -76,7 +76,7 @@
     }
 
     //分配用户角色的方法
-     http.allotRole = (id, rid) => {
+     http.allotRole = ({id, rid}) => {
           return http.put(`users/${id}/role`, {
               rid,  //角色的id
           })
@@ -89,8 +89,13 @@
     }
 
     //修改用户状态的方法
-     http.alterUserState = (id, state) => {
-            return http.put(`users/${id}/state/${state}`)
+     http.alterUserState = (id, type) => {
+            return http.put(`users/${id}/state/${type}`)
+     }
+
+     //获取权限列表的方法
+     http.getRight = (type) => {
+           return http.get('rights/'+type)
      }
 
     

@@ -12,7 +12,7 @@
              default-active: 默认展开项
          -->
         <el-menu
-         default-active=""
+         default-active="2"
          :unique-opened = "true"
           class="el-menu-vertical-demo"
           :router="true"
@@ -30,8 +30,9 @@
                   v-for="it in item.children"
                  :index="it.path"
                  :key="it.id"
+                 class="el-icon-menu"
                   >
-                  <i class="el-icon-menu"></i><span>{{it.authName}}</span> 
+                  <span>{{it.authName}}</span> 
                 </el-menu-item>
             </el-submenu>
         </el-menu>
@@ -58,7 +59,7 @@ export default {
 
     created(){
         http.menus().then(res => {
-            console.log(res)
+            //console.log(res)
             this.menusList = res.data.data
         })
     },
