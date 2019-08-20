@@ -215,7 +215,9 @@ export default {
               this.$message.success(res.data.meta.msg);
               this.addRoleFormVisible = false;
               this.getRolesList();
-            }
+             }else{
+               this.$message.error(res.data.meta.msg)
+             }
           });
         } else {
           return false;
@@ -230,6 +232,8 @@ export default {
         if (res.data.meta.status == 200) {
           this.$message.success(res.data.meta.msg);
           this.getRolesList();
+        } else{
+           this.$message.error(res.data.meta.msg)
         }
       });
     },
@@ -246,9 +250,11 @@ export default {
       http.editRoles(this.editRole).then(res => {
         //console.log(res);
         if (res.data.meta.status == 200) {
-          this.$message.success(res.data.meta.msg);
+          this.$message.success('编辑成功!');
           this.getRolesList();
           this.editRoleFormVisible = false;
+        } else{
+           this.$message.error(res.data.meta.msg)
         }
       });
     },
@@ -274,7 +280,7 @@ export default {
           //保存角色id
           this.roleId = row.id
           
-          //保存原来的值
+          //保存原来的值(concat())
            let temp = this.data.concat()
           //清空树形图数据
            this.data = []
@@ -312,11 +318,13 @@ export default {
             
              http.roleAuthorization({roleId: this.roleId, rids: rids})
                 .then( res => {
-                       console.log(res)
+                       //console.log(res)
                        if(res.data.meta.status == 200){
                           this.getRolesList()
                           this.$message.success(res.data.meta.msg)
                            this.dialogVisible = false
+                       }else{
+                          this.$message.error(res.data.meta.msg)
                        }
                 })
       },

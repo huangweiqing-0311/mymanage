@@ -131,7 +131,45 @@
                 rids
            })
       }
+
+      //获取商品列表的方法
+      http.getGoods = ({query, pagenum, pagesize}) => {
+             return http.get('goods', {
+                   params: {
+                    query,
+                    pagenum,
+                    pagesize, 
+                   }
+             })
+      }
       
+      //删除商品的方法
+      http.delGoods = (id) => {
+            return http.delete('goods/'+ id)
+      }
+
+      //添加商品的方法
+      http.addGoods = ({
+          goods_name,
+          goods_cat,
+          goods_price,
+          goods_number,
+          goods_weight,
+          goods_introduce,
+          pics,
+          attrs,   
+      }) =>{
+           return http.post('goods', {
+               goods_name,
+               goods_cat,
+               goods_price,
+               goods_number,
+               goods_weight,
+               goods_introduce,
+               pics,
+               attrs, 
+           }) 
+      }
 
 
     //请求拦截

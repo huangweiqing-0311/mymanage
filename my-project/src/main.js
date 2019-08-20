@@ -17,6 +17,13 @@ Vue.config.productionTip = false
   //参数1: 组件名;  参数2: 组件对象 
   Vue.component('bread', bread)
 
+  //导入日期格式化js文件
+   import moment from 'moment'
+  //设置全局过滤器
+   Vue.filter('formTime', function(value, format) {
+       return moment(value).format(format)
+   })
+
  //导入路由对象
  import router from './routers/routers.js'
 
