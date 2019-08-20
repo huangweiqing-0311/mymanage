@@ -13,6 +13,7 @@ import index from '../views/index.vue'
 import users from '../views/users.vue'
 import rights from '../views/rights.vue'
 import roles from '../views/roles.vue'
+import reports from '../views/reports.vue'
 
 //设置路由规则
 const routes = [
@@ -25,7 +26,7 @@ const routes = [
       {path: '/users', component: users},
       {path: '/rights', component: rights},
       {path: '/roles', component: roles},
-
+      {path: '/reports', component: reports},
    ]
   },
 ]

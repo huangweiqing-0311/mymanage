@@ -1,6 +1,6 @@
  <template>
   <div class="my-right">
-    <bread first="权限列表" second="权限列表"></bread>
+     <bread first="权限列表" second="权限列表"></bread>
 
      <el-table :data="rightData" border style="width: 100%">
        <el-table-column type="index" label="#"></el-table-column>

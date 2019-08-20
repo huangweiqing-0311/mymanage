@@ -95,11 +95,43 @@
 
      //获取权限列表的方法
      http.getRight = (type) => {
-           return http.get('rights/'+type)
+           return http.get(`rights/${type}`)
      }
 
-    
-     
+     //添加角色的方法
+      http.addRoles = ({roleName, roleDesc}) => {
+             return http.post('roles', {
+                    roleName,
+                    roleDesc,
+               
+             })
+      }
+
+      //编辑提交角色的方法
+      http.editRoles = ({id, roleName, roleDesc}) => {
+            return http.put(`roles/${id}`, {
+                roleDesc,
+                roleName, 
+            })
+      }
+
+     //删除某个角色的指定权限的方法
+     http.delRoleRight = (roleId, rightId) => {
+           return http.delete(`roles/${roleId}/rights/${rightId}`)
+     }
+
+     //删除角色的方法
+     http.delRole = (id) =>{
+           return http.delete(`roles/${id}`)
+     }
+
+     //角色授权的方法
+      http.roleAuthorization = ({roleId, rids}) => {
+           return http.post(`roles/${roleId}/rights`, {
+                rids
+           })
+      }
+      
 
 
     //请求拦截

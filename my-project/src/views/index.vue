@@ -110,6 +110,9 @@ export default {
   }
   .my-aside{
       background: #fff;
+       .el-menu{
+          border-right-color: #fff;
+       }
   }
   .my-main {
       background-color: rgb(242, 248, 248);
