@@ -15,6 +15,8 @@ import rights from '../views/rights.vue'
 import roles from '../views/roles.vue'
 import reports from '../views/reports.vue'
 import goods from '../views/goods.vue'
+import add from '../views/goods/add.vue'
+import categories from '../views/goods/categories.vue'
 
 //设置路由规则
 const routes = [
@@ -28,7 +30,13 @@ const routes = [
       {path: '/rights', component: rights},
       {path: '/roles', component: roles},
       {path: '/reports', component: reports},
-      {path: '/goods', component: goods},
+      {path: '/goods', component: goods,
+          children: [
+           {path: 'add', component: add},
+          ]
+       },
+      {path: '/categories', component: categories},
+
    ]
   },
 ]
@@ -41,21 +49,21 @@ const routes = [
   //导航守卫
   //to: 路由对象
   //from: 当前导航要离开的路由
-  router.beforeEach((to, from, next) => {
-        //window.console.log(to)
-        //只有首页要导航守卫,判断路由元信息即可
-        if(to.meta.needLogin){
-             if(window.localStorage.getItem('token')){
-                 next()
-             }else{
-                  //没有登录记录,回登录页
-                  Vue.prototype.$message.error('你还没有登录,请先登录')
-                  router.push('/login')
-             }  
-        } else{
-           next()
-        }
-  })
+//   router.beforeEach((to, from, next) => {
+//         //window.console.log(to)
+//         //只有首页要导航守卫,判断路由元信息即可
+//         if(to.meta.needLogin){
+//              if(window.localStorage.getItem('token')){
+//                  next()
+//              }else{
+//                   //没有登录记录,回登录页
+//                   Vue.prototype.$message.error('你还没有登录,请先登录')
+//                   router.push('/login')
+//              }  
+//         } else{
+//            next()
+//         }
+//   })
 
 //暴露路由对象
 export default router

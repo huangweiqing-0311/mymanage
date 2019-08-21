@@ -11,7 +11,7 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-col>
       <el-col :span="3">
-        <el-button type="success" plain>添加商品</el-button>
+        <el-button type="success" @click="toAddGoods" plain>添加商品</el-button>
       </el-col>
     </el-row>
 
@@ -50,7 +50,12 @@
       :total="total">
     </el-pagination>
 
-         </div> 
+     <!-- 添加商品 -->
+     
+
+       
+
+   </div> 
 </template>
 
 <script>
@@ -61,6 +66,7 @@
 export default {
    data() {
      return {
+        
         //商品列表数据
         goodsList: [],  
 
@@ -98,7 +104,9 @@ export default {
         },
 
         //添加商品
-        
+        toAddGoods(){
+            this.$router.push('/goods/add')
+        }, 
 
         //当前页码的事件
         handleCurrentChange(pagenum){
