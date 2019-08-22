@@ -7,6 +7,8 @@ import VueRouter from 'vue-router'
 //use一下
 Vue.use(VueRouter)
 
+import {http} from '../api/http'
+
 //导入组件
 import login from '../views/login.vue'
 import index from '../views/index.vue'
@@ -26,16 +28,12 @@ const routes = [
    //设置路由元信息(登陆过就会有)
    meta: {needLogin: true},
    children: [
-      {path: '/users', component: users},
-      {path: '/rights', component: rights},
-      {path: '/roles', component: roles},
+      {path: '/users', component: users, meta: {needLogin: true}, },
+      {path: '/rights', component: rights, meta: {needLogin: true}, },
+      {path: '/roles', component: roles, meta: {needLogin: true},  },
       {path: '/reports', component: reports},
-      {path: '/goods', component: goods,
-          children: [
-           {path: 'add', component: add},
-          ]
-       },
-      {path: '/categories', component: categories},
+      {path: '/goods', component: goods, meta: {needLogin: true},},
+      {path: '/categories', component: categories, meta: {needLogin: true},},
 
    ]
   },
@@ -49,21 +47,28 @@ const routes = [
   //导航守卫
   //to: 路由对象
   //from: 当前导航要离开的路由
-//   router.beforeEach((to, from, next) => {
-//         //window.console.log(to)
-//         //只有首页要导航守卫,判断路由元信息即可
-//         if(to.meta.needLogin){
-//              if(window.localStorage.getItem('token')){
-//                  next()
-//              }else{
-//                   //没有登录记录,回登录页
-//                   Vue.prototype.$message.error('你还没有登录,请先登录')
-//                   router.push('/login')
-//              }  
-//         } else{
-//            next()
-//         }
-//   })
+  router.beforeEach((to, from, next) => {
+       //window.console.log(to)
+        //只有首页要导航守卫,判断路由元信息即可
+        if(to.meta.needLogin){
+            
+         http.menus().then( res => {
+              console.log(res)  
+              if(res.data.meta.status == 400 && res.data.meta.msg == '无效token'){
+                  //提示用户还没有登录
+                  Vue.prototype.$message.warning('请先登录!!!')
+                  //打回登录页
+                  router.push('/login')
+              } else{
+                 //有登陆信息 放行
+                 next()
+              }
+         })  
+         
+        } else{
+           next()
+        }
+  })
 
 //暴露路由对象
 export default router

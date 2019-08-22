@@ -2,7 +2,7 @@
  import axios from 'axios'
 
  import Vue from 'vue'
- import router from '../routers/routers'
+ 
 
  //创建 多基地址, 并把对象导出
  export const http = axios.create({
@@ -178,12 +178,27 @@
            }) 
       }
 
+      //添加商品分类的方法
+      http.addGoodsCate = ({cat_pid, cat_name, cat_level}) => {
+            return http.post('categories',{
+                  cat_name: cat_name,
+                  cat_pid: cat_pid,
+                  cat_level: cat_level,
+            })
+      }
+
+      //删除商品分类的方法
+      http.delGoodsCate = (id) => {
+            return http.delete(`categories/${id}`)
+      }
+
 
     //请求拦截
     //可以在发这个请求之前把请求拦截下来,
     //添加一个请求头 token, 才能获取到数据
      http.interceptors.request.use(function (config) {
-
+        //每次请求之前把是响应弹出一次的记录清除  
+        
         config.headers.Authorization = window.localStorage.getItem('token')
         return config
      }, function(error) {
@@ -191,21 +206,28 @@
         return Promise.reject(error)
      })
 
-
+     
      //响应拦截器
-     http.interceptors.response.use(function(response) {
-         
+     // http.interceptors.response.use(function(response) {
+     //          //如果已经登录了就直接返回
+     //      //     if(flag){
+     //      //       return response    
+     //      //     }
+              
+     //          if(response.data.meta.status == 400 && response.data.meta.msg == '无效token'){
+                
+     //          //vue里的方法提示要登录(导入vue文件)
+     //          Vue.prototype.$message.warning('你还没有登录,请先登录!!!')
+     //          //标记已经登录过一次了
+     //          //flag = true  //记录登录信息
 
-              if(response.data.meta.status == 400 && response.data.meta.msg == '无效token'){
-              //vue里的方法提示要登录(导入vue文件)
-              Vue.prototype.$message.warning('你还没有登录,请先登录!!!')
-              //回到登录页(导入router文件)
-              router.push('/login')
-              return
-              }
-              return response
+     //          //回到登录页(导入router文件)
+     //          router.push('/login')
+     //          return
+     //          }
+     //          return response
   
-      }, function(error) {
-           //响应错误
-           return Promise.reject(error)
-      })
+     //  }, function(error) {
+     //       //响应错误
+     //       return Promise.reject(error)
+     //  })

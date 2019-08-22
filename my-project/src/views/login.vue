@@ -61,7 +61,7 @@ export default {
                  //console.log(res)
                  if(res.data.meta.status == 200){
                  //把 token 保存起来
-                 window.localStorage.setItem('token', res.data.data.token)
+                window.localStorage.setItem('token', res.data.data.token)
                  //提示用户登录成功
                   this.$message.success(res.data.meta.msg)
                   //跳转到首页index
