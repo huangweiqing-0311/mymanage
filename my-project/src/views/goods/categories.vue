@@ -11,6 +11,7 @@
       border
       style="width: 100%;margin-bottom: 20px;"
        >
+       <!-- label:表头的名字 treekey:商品分类里的id  parentkey: 父节点的id  levelkey: 自身层级-->
       <el-table-tree-column
         file-icon="icon icon-file"
         folder-icon="icon icon-folder"
@@ -21,7 +22,7 @@
         parentKey="cat_pid"
         levelKey="cat_level"
       ></el-table-tree-column>
-      
+
       <el-table-column prop="cat_level" label="级别" sortable width="150">
         <template slot-scope="scope">{{ scope.row.cat_level | formGrad}}</template>
       </el-table-column>
@@ -79,6 +80,19 @@
         <el-button type="primary" @click="addCate()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 编辑商品 -->
+     <el-dialog title="编辑分类" :visible.sync="editFormVisible">
+      <el-form :model="editForm">
+        <el-form-item label="分类名称"  label-width="90px">
+          <el-input v-model="editForm.cat_name"  autocomplete="off"></el-input>
+        </el-form-item>
+       </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="editFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editClass()">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
  
@@ -109,17 +123,21 @@ export default {
       //总条数
       total: '',
       //添加商品
-      dialogFormVisible: false
-    };
+      dialogFormVisible: false,
+      //编辑分类
+      editFormVisible: false,
+      //编辑参数
+      editForm: {
+         id: '',
+         cat_name: '',  
+      }
+      };
   },
 
   methods: {
     //添加商品分类
     addGoods() {
-      this.dialogFormVisible = true;
-     },
-    addCate(){
-       console.log(this.addForm.value)
+        this.dialogFormVisible = true;
        //获取分类层级: 其实就是级联选择器的长度
        let length = this.addForm.value.length
        this.addForm.cat_level = length
@@ -133,10 +151,40 @@ export default {
             this.addForm.cat_pid = this.addForm.value[length - 1]
        }
 
-        http.addGoodsCate(this.addForm).then( res =>{
+     },
+    addCate(){
+       //console.log(this.addForm.value)
+       http.addGoodsCate(this.addForm).then( res =>{
             console.log(res)
+            if(res.data.meta.status == 201){
+                this.getGoodsList()
+                this.$message.success(res.data.meta.msg)
+                this.dialogFormVisible = false
+            }else{
+                this.$message.error(res.data.meta.msg)
+            }
         })  
     },
+
+    //编辑商品分类
+    classEdit(row){
+        this.editFormVisible = true
+        this.editForm.id = row.cat_id
+        this.editForm.cat_name = row.cat_name
+    },
+    editClass(){
+         http.editCate(this.editForm).then( res => {
+             console.log(res)
+             if(res.data.meta.status == 200){
+                 this.$message.success(res.data.meta.msg)
+                 this.editFormVisible = false
+                 this.getGoodsList()
+             }else{
+                 this.$message.error(res.data.meta.msg)
+             }
+         })  
+    },
+
     //删除商品
     classDel(row) {
       this.$confirm("是否真的要删除!", "温馨提示", {

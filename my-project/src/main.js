@@ -12,6 +12,12 @@ Vue.config.productionTip = false
  //use一下
  Vue.use(ElementUI);
 
+ //使用element-tree-grid
+ //下包 npm install element-tree-grid --save
+ //导包注册成全局组件
+  import ElTreeGrid from 'element-tree-grid';
+  Vue.component(ElTreeGrid.name,ElTreeGrid);
+
  //注册全局组件
   import bread from './components/bread.vue'
   //参数1: 组件名;  参数2: 组件对象 

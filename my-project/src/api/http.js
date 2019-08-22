@@ -181,11 +181,18 @@
       //添加商品分类的方法
       http.addGoodsCate = ({cat_pid, cat_name, cat_level}) => {
             return http.post('categories',{
-                  cat_name: cat_name,
-                  cat_pid: cat_pid,
-                  cat_level: cat_level,
+                   cat_pid,
+                   cat_name,
+                   cat_level,
             })
       }
+
+      //编辑提交分类的方法
+       http.editCate = ({id, cat_name}) =>{
+              return http.put(`categories/${id}`,{
+                   cat_name,
+              })
+       }
 
       //删除商品分类的方法
       http.delGoodsCate = (id) => {
