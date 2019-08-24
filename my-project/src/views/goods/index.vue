@@ -1,17 +1,12 @@
 <template>
-         <div class="my-goods">
-              <bread first="商品管理" second="商品列表"></bread>
-    
-            
-      <!-- 搜索栏 -->
-       <!-- 搜索栏 -->
-    <el-row>
+        <div class="goodsList">
+       <el-row>
       <el-col :span="6">
         <el-input v-model="input" placeholder="请输入内容"></el-input>
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-col>
       <el-col :span="3">
-        <el-button type="success" @click="toAddGoods" plain>添加商品</el-button>
+        <el-button type="success" @click="$router.push('goods/add')" plain>添加商品</el-button>
       </el-col>
     </el-row>
 
@@ -49,23 +44,15 @@
        layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>
-
-     <!-- 添加商品 -->
-     
-
-       
-
-   </div> 
+        </div>
 </template>
 
-<script>
- import moment from 'moment' 
-
- import {http} from '../api/http'
-
+<script> 
+  import {http} from '../../api/http'
 export default {
-   data() {
-     return {
+
+     data() {
+      return {
         
         //商品列表数据
         goodsList: [],  
@@ -80,8 +67,7 @@ export default {
         total: '',
      }
    },
-     
-   methods: {
+    methods: {
         //删除商品
         goodsDel(row){
               this.$confirm('你确定要删除此商品吗?', '温馨提示', {
@@ -131,16 +117,8 @@ export default {
             })
        }
    },
-   
-   //过滤器
-    // filters: {
-    //     //时间过滤器
-    //     formTime(value, format){
-    //       return moment(value).format(format)
-    //     },
-    // },
 
-   created() {
+    created() {
          this.getGoodsList()
    },
 }

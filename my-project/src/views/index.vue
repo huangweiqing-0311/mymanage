@@ -26,9 +26,10 @@
               <i class="el-icon-location"></i>
               <span>{{item.authName}}</span>
             </template>
+            <!-- '/' + it.path 相对于根目录 -->
                  <el-menu-item 
                   v-for="it in item.children"
-                 :index="it.path"
+                 :index=" '/' + it.path"
                  :key="it.id"
                  class="el-icon-menu"
                   >
@@ -115,7 +116,7 @@ export default {
        }
   }
   .my-main {
-      background-color: rgb(242, 248, 248);
+      background-color: rgb(216, 250, 250);
       padding-top: 0;
   }
 }

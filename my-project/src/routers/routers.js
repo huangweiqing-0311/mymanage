@@ -16,9 +16,11 @@ import users from '../views/users.vue'
 import rights from '../views/rights.vue'
 import roles from '../views/roles.vue'
 import reports from '../views/reports.vue'
-import goods from '../views/goods.vue'
+
+import goods from '../views/goods/goods.vue'
 import add from '../views/goods/add.vue'
 import categories from '../views/goods/categories.vue'
+import goodsIndex from '../views/goods/index.vue'
 
 //设置路由规则
 const routes = [
@@ -32,7 +34,12 @@ const routes = [
       {path: '/rights', component: rights, meta: {needLogin: true}, },
       {path: '/roles', component: roles, meta: {needLogin: true},  },
       {path: '/reports', component: reports},
-      {path: '/goods', component: goods, meta: {needLogin: true},},
+      {path: '/goods', component: goods, meta: {needLogin: true},
+       children: [
+          {path: '', component: goodsIndex},
+          {path: 'add', component: add},
+        ]
+      },
       {path: '/categories', component: categories, meta: {needLogin: true},},
 
    ]
