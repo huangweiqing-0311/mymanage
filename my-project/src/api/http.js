@@ -199,6 +199,22 @@
             return http.delete(`categories/${id}`)
       }
 
+      //图片上传的方法
+      http.setImgUpload = (file) => {
+            return http.post('upload', { file})
+      }
+
+      //获取订单列表的方法
+      http.getOrders = ({query, pagenum, pagesize}) => {
+            return http.get('orders', {
+                 params: {
+                    query,
+                    pagenum,
+                    pagesize,
+                 }
+            })
+      }
+
 
     //请求拦截
     //可以在发这个请求之前把请求拦截下来,

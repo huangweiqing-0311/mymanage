@@ -16,17 +16,18 @@ import users from '../views/users.vue'
 import rights from '../views/rights.vue'
 import roles from '../views/roles.vue'
 import reports from '../views/reports.vue'
+import orders from '../views/orders.vue'
 
 import goods from '../views/goods/goods.vue'
-import add from '../views/goods/add.vue'
-import categories from '../views/goods/categories.vue'
 import goodsIndex from '../views/goods/index.vue'
+import add from '../views/goods/add.vue'
 import params from '../views/goods/params.vue'
+import categories from '../views/goods/categories.vue'
 
 //设置路由规则
 const routes = [
   {path: '/login', component: login},
-  {path: '', redirect: '/login'},
+  {path: '', redirect: '/index'},
   {path: '/index', component: index,
    //设置路由元信息(登陆过就会有)
    meta: {needLogin: true},
@@ -43,6 +44,7 @@ const routes = [
       },
       {path: '/categories', component: categories, meta: {needLogin: true},},
       {path: '/params', component: params,  meta: {needLogin: true},},
+      {path: '/orders', component: orders, meta: {needLogin: true}, },
 
    ]
   },

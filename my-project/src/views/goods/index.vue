@@ -74,7 +74,7 @@ export default {
                type: 'warning'
             }).then( () => {
                  http.delGoods(row.goods_id).then( res => {
-                     console.log(res)
+                    //  console.log(res)
                       if(res.data.meta.status == 200){
                            this.$message.success('删除成功!')
                            this.getGoodsList()

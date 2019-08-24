@@ -103,7 +103,7 @@ export default {
               //获取分类的方法
              getCateList(){
                    http.categoriesList(2).then( res => {
-                     console.log(res)
+                     //console.log(res)
                   this.list = res.data.data
               })
              }

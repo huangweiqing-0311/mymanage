@@ -155,7 +155,7 @@ export default {
     addCate(){
        //console.log(this.addForm.value)
        http.addGoodsCate(this.addForm).then( res =>{
-            console.log(res)
+            //console.log(res)
             if(res.data.meta.status == 201){
                 this.getGoodsList()
                 this.$message.success(res.data.meta.msg)
@@ -174,7 +174,7 @@ export default {
     },
     editClass(){
          http.editCate(this.editForm).then( res => {
-             console.log(res)
+             //console.log(res)
              if(res.data.meta.status == 200){
                  this.$message.success(res.data.meta.msg)
                  this.editFormVisible = false
@@ -193,7 +193,7 @@ export default {
         .then(() => {
           //删除商品的方法
           http.delGoodsCate(row.cat_id).then(res => {
-            console.log(res);
+            //console.log(res);
             if (res.data.meta.status == 200) {
               this.$message.success("删除成功!");
               this.getGoodsList();
