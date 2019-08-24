@@ -62,7 +62,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" >确 定</el-button>
+          <el-button type="primary" @click="setEditOrder()">确 定</el-button>
         </div>
       </el-dialog>
   </div>
@@ -75,7 +75,12 @@ export default {
     return {
       //编辑
       editForm: {
-          order_id: '',
+          id: '',
+          is_send: '',
+          order_pay: '',
+          order_price: '',
+          order_number: '',
+          pay_status: '',
       },
 
       pageList: {
@@ -95,9 +100,18 @@ export default {
     handleEdit(row) {
       console.log(row);
       this.dialogFormVisible = true
-      this.editForm.order_id = row.order_id
-
+      this.editForm.id = row.order_id
+      this.editForm.is_send = row.is_send
+      this.editForm.order_pay = row.order_pay
+      this.editForm.order_price = row.order_price
+      this.editForm.order_number = row.order_number
+      this.editForm.pay_status = row.pay_status 
     },
+    setEditOrder(){
+         http.editOrder(this.editForm).then( res => {
+              console.log(res)
+         })
+    }, 
 
     //点击页码的事件
     handleCurrentChange(page) {

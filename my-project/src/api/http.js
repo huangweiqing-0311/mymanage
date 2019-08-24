@@ -214,7 +214,22 @@
                  }
             })
       }
+     
+     //修改订单的方法
+      http.editOrder = ({id, is_send, order_pay, order_price, order_number, pay_status}) =>{
+              return http.put(`orders/${id}`, {
+                    is_send,
+                    order_pay,
+                    order_price,
+                    order_number,
+                    pay_status, 
+              })
+      }
 
+      //图标统计的方法
+      http.tuReports = () => {
+            return http.get('reports/type/1')
+      }
 
     //请求拦截
     //可以在发这个请求之前把请求拦截下来,
