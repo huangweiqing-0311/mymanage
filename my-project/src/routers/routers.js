@@ -21,6 +21,7 @@ import goods from '../views/goods/goods.vue'
 import add from '../views/goods/add.vue'
 import categories from '../views/goods/categories.vue'
 import goodsIndex from '../views/goods/index.vue'
+import params from '../views/goods/params.vue'
 
 //设置路由规则
 const routes = [
@@ -41,6 +42,7 @@ const routes = [
         ]
       },
       {path: '/categories', component: categories, meta: {needLogin: true},},
+      {path: '/params', component: params,  meta: {needLogin: true},},
 
    ]
   },
